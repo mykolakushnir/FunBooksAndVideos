@@ -398,3 +398,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/BooksAndVideosShop/BooksAndVideosShop.Api/ShopDB.db
+/BooksAndVideosShop/BooksAndVideosShop.Api/ShopDB.db-shm
+/BooksAndVideosShop/BooksAndVideosShop.Api/ShopDB.db-wal
