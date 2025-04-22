@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="8.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BooksAndVideosShop.DataAccess\BooksAndVideosShop.DataAccess.csproj" />
+    <ProjectReference Include="..\BooksAndVideosShop.Domain\BooksAndVideosShop.Domain.csproj" />
+    <ProjectReference Include="..\BooksAndVideosShop.Logic\BooksAndVideosShop.Logic.csproj" />
+  </ItemGroup>
+
+</Project>
