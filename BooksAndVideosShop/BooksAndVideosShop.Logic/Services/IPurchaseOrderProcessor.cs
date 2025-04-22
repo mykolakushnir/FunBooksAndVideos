@@ -1,9 +1,11 @@
 ﻿using BooksAndVideosShop.Domain.DTOs;
+using BooksAndVideosShop.Domain.DTOs.Responses;
+using BooksAndVideosShop.Logic.Results;
 
 namespace BooksAndVideosShop.Logic.Services
 {
     public interface IPurchaseOrderProcessor
     {
-        Task ProcessAsync(PurchaseOrderDto order);
+        Task<Result<PurchaseOrderResponseDto>> ProcessAsync(PurchaseOrderDto order);
     }
 }
