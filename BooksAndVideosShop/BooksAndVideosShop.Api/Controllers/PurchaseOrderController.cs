@@ -25,7 +25,7 @@ namespace BooksAndVideosShop.Api.Controllers
                 return BadRequest("Invalid order.");
             }
 
-            var orderResult = await _processor.ProcessAsync(orderDto);           
+            var orderResult = await _processor.ProcessAsync(orderDto);
 
             if (!orderResult.IsSuccess)
             {
