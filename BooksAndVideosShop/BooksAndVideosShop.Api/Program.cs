@@ -5,6 +5,7 @@ using BooksAndVideosShop.Domain.Interfaces;
 using BooksAndVideosShop.Logic.BusinessRules;
 using BooksAndVideosShop.Logic.Services;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace BooksAndVideosShop.Api
 {
@@ -13,6 +14,19 @@ namespace BooksAndVideosShop.Api
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // setup logger
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.Console()
+                .WriteTo.File(
+                "Logs/log-.txt", 
+                rollingInterval: RollingInterval.Day,
+                outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .Enrich.FromLogContext()
+                .CreateLogger();
+
+            builder.Host.UseSerilog();
 
             // Add services to the container.
 
@@ -31,28 +45,41 @@ namespace BooksAndVideosShop.Api
             builder.Services.AddScoped<IPurchaseOrderProcessor, PurchaseOrderProcessor>();
             builder.Services.AddScoped<IDbSeeder, DbSeeder>();
 
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            try
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                Log.Information("Starting BooksAndVideosShop application");
 
-                using (var scope = app.Services.CreateScope())
+                var app = builder.Build();
+
+                // Configure the HTTP request pipeline.
+                if (app.Environment.IsDevelopment())
                 {
-                    var seeder = scope.ServiceProvider.GetRequiredService<IDbSeeder>();
-                    await seeder.SeedTestDataAsync();
+                    app.UseSwagger();
+                    app.UseSwaggerUI();
+
+                    using (var scope = app.Services.CreateScope())
+                    {
+                        var seeder = scope.ServiceProvider.GetRequiredService<IDbSeeder>();
+                        await seeder.SeedTestDataAsync();
+                    }
                 }
+
+                app.UseHttpsRedirection();
+
+                app.UseAuthorization();
+
+                app.MapControllers();
+
+                app.Run();
             }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-            app.MapControllers();
-
-            app.Run();
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Something went wrong!");
+            }
+            finally 
+            {
+                await Log.CloseAndFlushAsync();
+            }            
         }
     }
 }
